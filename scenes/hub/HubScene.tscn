@@ -1,0 +1,99 @@
+[gd_scene load_steps=4 format=3 uid="c8f9a2b4e5d6c7a8"]
+
+[ext_resource type="Script" path="res://scripts/systems/HubScene.gd" id="1_hub"]
+[ext_resource type="Script" path="res://scripts/entities/Player.gd" id="2_player"]
+
+[node name="HubScene" type="Node2D"]
+script = ExtResource("1_hub")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+color = Color(0.05, 0.05, 0.08, 1)
+
+[node name="SafeZoneIndicator" type="Polygon2D" parent="."]
+position = Vector2(540, 960)
+color = Color(0.0, 0.3, 0.1, 0.3)
+polygon = PackedVector2Array(-400, -400, 400, -400, 400, 400, -400, 400)
+
+[node name="LightSource" type="PointLight2D" parent="."]
+position = Vector2(540, 800)
+texture = null
+color = Color(1, 0.9, 0.6, 1)
+energy = 2.0
+range = 600
+shadow_enabled = false
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(540, 1100)
+script = ExtResource("2_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+scale = Vector2(3, 3)
+texture = null
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = ExtResource("circle_shape")
+
+[node name="AttackHitbox" type="Area2D" parent="Player"]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/AttackHitbox"]
+shape = ExtResource("circle_shape")
+
+[node name="NPC_VillageElder" type="CharacterBody2D" parent="."]
+position = Vector2(540, 700)
+
+[node name="Sprite2D" type="Sprite2D" parent="NPC_VillageElder"]
+scale = Vector2(3, 3)
+texture = null
+
+[node name="Label" type="Label" parent="NPC_VillageElder"]
+offset_left = -60.0
+offset_top = -40.0
+offset_right = 60.0
+offset_bottom = -10.0
+text = "Village Elder"
+horizontal_alignment = 1
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="LightDisplay" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 60.0
+text = "💡 Light: 100"
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="HealthDisplay" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 70.0
+offset_right = 200.0
+offset_bottom = 110.0
+text = "❤️ HP: 100/100"
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="SurvivorsDisplay" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 120.0
+offset_right = 200.0
+offset_bottom = 160.0
+text = "👥 Survivors: 0"
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 24
+
+[node name="DistrictInfo" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 1800.0
+offset_right = 500.0
+offset_bottom = 1840.0
+text = "📍 Safe Haven (Hub)"
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 20
+
+[connection signal="body_entered" from="Player/AttackHitbox" to="Player" method="_on_attack_hitbox_body_entered"]
